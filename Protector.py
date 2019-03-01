@@ -35,23 +35,17 @@ while(True):
 		cv2.rectangle(frame,(x,y),(x+w,y+h),(255,255,0),2)  
 		roi_gray = gray[y:y+h, x:x+w]
 		id_, conf = recognizer.predict(roi_gray)
-		if conf>=45 and conf<=85:
+		print(conf)
+		if conf>=50 and conf<=60:
 			lockCounter=0
 			break
 		else:
 			lockCounter+=1
 
 
-
-	# Determine if face in in view, if not lock Mac
-	#if len(faces) > 0:
-	#	lockCounter = 0
-	#else:
-	#	lockCounter = lockCounter + 1
-
-	# This value determines how many frames pass without a face before Mac locks
 	print(lockCounter)
 	if lockCounter >= 10:
+		exit(1) #for testing purposes
 		subprocess.call('/System/Library/CoreServices/Menu\ Extras/User.menu/Contents/Resources/CGSession -suspend',shell=True)
 		sys.exit()
 	
