@@ -1,3 +1,4 @@
+#adapted from @jmitchel3 on Github
 import cv2
 import os
 import numpy as np
@@ -25,9 +26,7 @@ for root, dirs, files in os.walk(imagedir):
 			label = os.path.basename(root).replace(" ","-").lower()
 			#print(path)
 			#print(label)
-			if label in labelIDs:
-				pass
-			else:
+			if label not in labelIDs:
 				labelIDs[label] = currentID
 				currentID+=1
 			id_ = labelIDs[label]
@@ -37,13 +36,17 @@ for root, dirs, files in os.walk(imagedir):
 			final_image = pil_image.resize(size, Image.ANTIALIAS)
 			image_array = np.array(final_image, "uint8")
 			#print(image_array)
-			print(id_)
-			faces = face_cascade.detectMultiScale(image_array, scaleFactor=1.5, minNeighbors=5)
+			#print(image_array)
+			faces = face_cascade.detectMultiScale(image_array)
+			for arr in faces:
+				print(arr)
+				for i in range(0,len(arr)//4):
+					roi = image_array[arr[(4*i)+1]:arr[(4*i)+1]+arr[(4*i)+3], arr[(4*i)]:arr[(4*i)+1]+arr[(4*i)+2]]
+					x_train.append(roi)
+					y_labels.append(id_)
+#print(x_train)
+with open(os.getcwd()+"/pickles/face-labels.pickle", 'wb') as f:
+	pickle.dump(labelIDs, f)
 
-			for (x,y,w,h) in faces:
-				roi = image_array[y:y+h, x:x+w]
-				x_train.append(roi)
-				y_labels.append(id_)
-
-print(y_labels)
-print(x_train)
+recognizer.train(x_train, np.array(y_labels))
+recognizer.save(os.getcwd()+"/recognizers/face-trainner.yml")
