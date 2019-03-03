@@ -1,6 +1,5 @@
-# Hayden Riewe
-# github.com/hriewe
-# hrcyber.tech
+# Ethan Bensman
+# github.com/ebenz99
 
 import numpy as np
 import cv2

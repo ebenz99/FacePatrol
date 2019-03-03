@@ -1,4 +1,5 @@
 #adapted from @jmitchel3 on Github
+
 import cv2
 import os
 import numpy as np
@@ -35,9 +36,10 @@ for root, dirs, files in os.walk(imagedir):
 			size = (550, 550)
 			final_image = pil_image.resize(size, Image.ANTIALIAS)
 			image_array = np.array(final_image, "uint8")
+			r = cv2.equalizeHist(cv2.UMat(image_array))
 			#print(image_array)
 			#print(image_array)
-			faces = face_cascade.detectMultiScale(image_array)
+			faces = face_cascade.detectMultiScale(r)
 			for arr in faces:
 				print(arr)
 				for i in range(0,len(arr)//4):
